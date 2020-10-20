@@ -70,6 +70,25 @@ func (c *Client) GetNonce(address, publicKey, finality string) (int64, error) {
 	return nonce + 1, nil
 }
 
+func (c *Client)GetAccountBalance(address string)(string,string,error){
+	params := make(map[string]interface{})
+	params["request_type"] = "view_account"
+	params["account_id"] = address
+	params["finality"] = "final"
+	var resp map[string]interface{}
+	err := c.Post("query", &resp, params)
+	if err != nil {
+		return "", "", err
+	}
+	if resp["amount"]==nil {
+		return "","",errors.New("amount is null")
+	}
+	if resp["locked"]==nil  {
+		return "","",errors.New("locked amount is null")
+	}
+	return resp["acount"].(string),resp["locked"].(string),nil
+}
+
 func (c *Client) BroadcastTransaction(stxBase64 string) (string, error) {
 	var resp NearTxStatus
 	err := c.Post("broadcast_tx_commit", &resp, []interface{}{stxBase64})
