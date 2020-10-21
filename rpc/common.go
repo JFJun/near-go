@@ -86,7 +86,7 @@ func (c *Client)GetAccountBalance(address string)(string,string,error){
 	if resp["locked"]==nil  {
 		return "","",errors.New("locked amount is null")
 	}
-	return resp["acount"].(string),resp["locked"].(string),nil
+	return resp["amount"].(string),resp["locked"].(string),nil
 }
 
 func (c *Client) BroadcastTransaction(stxBase64 string) (string, error) {
